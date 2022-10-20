@@ -16,7 +16,10 @@ fetch(`http://localhost:3000/api/products/${product}`) //requete http
   .then(function (data) {
     // recuperer les data
     buildImageProduct(data);
-    console.log(data); // logs des data dans la console
+    buildTitleProduct(data);
+    buidPriceProduct(data);
+    buildDescriptionProduct(data);
+    console.log(data);
   });
 
 function buildImageProduct(product) {
@@ -25,4 +28,25 @@ function buildImageProduct(product) {
   console.log(imgProduit[0]); // logs des produit dans la console
 
   imgProduit[0].innerHTML += `<img src="${product.imageUrl}" alt="Photographie d'un canapé">`;
+}
+
+function buildTitleProduct(product) {
+  let titreProduit = document.getElementById("title");
+  console.log(titreProduit);
+
+  titreProduit.innerHTML += `${product.name}`;
+}
+
+function buidPriceProduct(product) {
+  let price = document.getElementById("price");
+  console.log(price);
+
+  price.innerHTML = "42";
+}
+
+function buildDescriptionProduct(product) {
+  let descriptionProduit = document.getElementById("description");
+  console.log(descriptionProduit);
+
+  descriptionProduit.innerHTML += `${product.description}`;
 }
