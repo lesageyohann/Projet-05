@@ -19,6 +19,7 @@ fetch(`http://localhost:3000/api/products/${product}`) //requete http
     buildTitleProduct(data);
     buidPriceProduct(data);
     buildDescriptionProduct(data);
+    forEach((element) => buildColorProduct(element));
     console.log(data);
   });
 
@@ -41,7 +42,7 @@ function buidPriceProduct(product) {
   let price = document.getElementById("price");
   console.log(price);
 
-  price.innerHTML = "42";
+  price.innerHTML = `${product.price}`;
 }
 
 function buildDescriptionProduct(product) {
@@ -49,4 +50,11 @@ function buildDescriptionProduct(product) {
   console.log(descriptionProduit);
 
   descriptionProduit.innerHTML += `${product.description}`;
+}
+
+function buildColorProduct(product) {
+  let couleurProduit = document.getElementById("colors");
+  console.log(couleurProduit);
+
+  couleurProduit.innerHTML += `<option value="${product.colors}>${product.colors}</option>`;
 }
