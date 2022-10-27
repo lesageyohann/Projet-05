@@ -19,8 +19,12 @@ fetch(`http://localhost:3000/api/products/${product}`) //requete http
     buildTitleProduct(data);
     buidPriceProduct(data);
     buildDescriptionProduct(data);
-    forEach((element) => buildColorProduct(element));
+    buildColorProduct(data);
     console.log(data);
+  })
+  .catch(function (err) {
+    console.log(err);
+    // Une erreur est survenue
   });
 
 function buildImageProduct(product) {
@@ -53,8 +57,19 @@ function buildDescriptionProduct(product) {
 }
 
 function buildColorProduct(product) {
-  let couleurProduit = document.getElementById("colors");
-  console.log(couleurProduit);
+  for (let color of product.colors) {
+    let couleurProduit = document.getElementById("colors");
+    console.log(couleurProduit);
+    couleurProduit.innerHTML += `<option value="${color}">${color}</option>`;
+  }
+}
 
-  couleurProduit.innerHTML += `<option value="${product.colors}>${product.colors}</option>`;
+let button = document.getElementById("addToCart");
+button.addEventListener("click", addCart);
+
+function addCart() {
+  let color = document.getElementById("colors").value;
+  console.log(color);
+  let quantity = document.getElementById("quantity").value;
+  console.log(quantity);
 }
