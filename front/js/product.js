@@ -27,10 +27,13 @@ fetch(`http://localhost:3000/api/products/${product}`) //requete http
     // Une erreur est survenue
   });
 
+// fonction de creation d image produit
+// creation d'une variable a partir de l id des elements dans le document
+// logs des produit dans la console
+// ajout du contenu dans le fichier html
 function buildImageProduct(product) {
-  // fonction de creation d image produit
-  let imgProduit = document.getElementsByClassName("item__img"); // creation d'une variable a partir de l id des elements dans le document
-  console.log(imgProduit[0]); // logs des produit dans la console
+  let imgProduit = document.getElementsByClassName("item__img");
+  console.log(imgProduit[0]);
 
   imgProduit[0].innerHTML += `<img src="${product.imageUrl}" alt="Photographie d'un canapé">`;
 }
@@ -64,12 +67,45 @@ function buildColorProduct(product) {
   }
 }
 
+// evenement à l'action sur le bouton
+// récuperation de l id, couleur et quantité
+// creation d'un tableau
+// transforme les objets en valeurs
+
 let button = document.getElementById("addToCart");
 button.addEventListener("click", addCart);
 
 function addCart() {
+  let id = urlParams.get("id");
+  console.log(id);
+
   let color = document.getElementById("colors").value;
   console.log(color);
+
   let quantity = document.getElementById("quantity").value;
   console.log(quantity);
+
+  let product = {
+    id: id,
+    color: color,
+    quantity: quantity,
+  };
+
+  let productInLocalStorage = JSON.parse(localStorage.getItem("product"));
+
+  // si locacalstorage = null alors on ajoute l objet produit
+  // sinon modifier produit
+  if (productInLocalStorage == null) {
+    productInLocalStorage = [];
+    productInLocalStorage.push(product),
+      localStorage.setItem("product", JSON.stringify(productInLocalStorage));
+  } else if (productInLocalStorage != null) {
+    //let check = productInLocalStorage.findIndex();
+    let object = productInLocalStorage.findIndex(
+      (element) => element.id === id && element.color === color
+    );
+    console.log(object);
+    productInLocalStorage.push(product), //rajouter condition si objet deja present  find / findindex
+      localStorage.setItem("product", JSON.stringify(productInLocalStorage));
+  }
 }
