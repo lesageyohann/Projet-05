@@ -27,6 +27,11 @@ fetch(`http://localhost:3000/api/products/${product}`) //requete http
     // Une erreur est survenue
   });
 
+let errorColor = document.createElement("div");
+document.getElementById("colors").after(errorColor);
+let errorQuantity = document.createElement("div");
+document.getElementById("quantity").after(errorQuantity);
+
 // fonction de creation d image produit
 // creation d'une variable a partir de l id des elements dans le document
 // logs des produit dans la console
@@ -73,9 +78,12 @@ function buildColorProduct(product) {
 // transforme les objets en valeurs
 
 let button = document.getElementById("addToCart");
+
 button.addEventListener("click", addCart);
 
 function addCart() {
+  errorColor.innerText = "";
+  errorQuantity.innerText = "";
   let id = urlParams.get("id");
   console.log(id);
 
@@ -93,19 +101,32 @@ function addCart() {
 
   let productInLocalStorage = JSON.parse(localStorage.getItem("product"));
 
-  // si locacalstorage = null alors on ajoute l objet produit
-  // sinon modifier produit
-  if (productInLocalStorage == null) {
-    productInLocalStorage = [];
-    productInLocalStorage.push(product),
-      localStorage.setItem("product", JSON.stringify(productInLocalStorage));
-  } else if (productInLocalStorage != null) {
-    //let check = productInLocalStorage.findIndex();
-    let object = productInLocalStorage.findIndex(
-      (element) => element.id === id && element.color === color
-    );
-    console.log(object);
-    productInLocalStorage.push(product), //rajouter condition si objet deja present  find / findindex
-      localStorage.setItem("product", JSON.stringify(productInLocalStorage));
+  if (color == "") {
+    errorColor.innerText = "Choisir couleur";
+  }
+  if (parseInt(quantity) <= 0 || parseInt(quantity) > 100) {
+    errorQuantity.innerText = "Ajouter quantité";
+  }
+  if (color != "" && parseInt(quantity) > 0 && parseInt(quantity) < 100) {
+    if (productInLocalStorage == null) {
+      productInLocalStorage = [];
+      productInLocalStorage.push(product),
+        localStorage.setItem("product", JSON.stringify(productInLocalStorage));
+    } else {
+      let index = productInLocalStorage.findIndex(
+        (p) => p.id === id && p.color === color
+      );
+      console.log(index);
+      if (index >= 0) {
+        productInLocalStorage[index].quantity =
+          parseInt(productInLocalStorage[index].quantity) + parseInt(quantity); // envoie la nouvelle valeur + valeur ajouté
+        localStorage.setItem("product", JSON.stringify(productInLocalStorage));
+        console.log("okQuantite");
+      } else {
+        productInLocalStorage.push(product);
+        localStorage.setItem("product", JSON.stringify(productInLocalStorage));
+        console.log("okProduit");
+      }
+    }
   }
 }
