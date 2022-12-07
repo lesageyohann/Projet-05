@@ -29,7 +29,7 @@ if (produitInLocalStorage === null || produitInLocalStorage.length === 0) {
                   </div>
                   <div class="cart__item__content__settings">
                     <div class="cart__item__content__settings__quantity">
-                      <p>Qté : </p>
+                      <p>Qté :${product.quantity} </p>
                       <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${element.quantity}">
                     </div>
                     <div class="cart__item__content__settings__delete">
@@ -39,8 +39,30 @@ if (produitInLocalStorage === null || produitInLocalStorage.length === 0) {
                 </div>
               </article>`;
       });
+      Total(data);
     })
     .catch(function (err) {
       console.log(err);
       // Une erreur est survenue
     });
+
+function Total() {
+  let prixTotal = [];
+  let quantiteTotal = [];
+  let productInLocalStorage = JSON.parse(localStorage.getItem("product"));
+
+  for (let t = 0; t < productInLocalStorage.length; t++) {
+    let prixPanier =
+      productInLocalStorage[t].prix * productInLocalStorage[t].quantite;
+    let quantitePanier = parseInt(productInLocalStorage[t].quantite);
+
+    prixTotal.push(prixPanier);
+    quantiteTotal.push(quantitePanier);
+
+    console.log(prixPanier);
+    console.log(quantitePanier);
+  }
+
+  document.querySelector("#totalPrice").innerHTML = `${prixTotal}`;
+  document.querySelector("#totalQuantity").innerHTML = `${quantiteTotal}`;
+}
