@@ -1,21 +1,19 @@
-fetch("http://localhost:3000/api/products") //requete http
+fetch("http://localhost:3000/api/products")
   .then(function (res) {
-    //recuperer le resultat
     if (res.ok) {
-      // si reponse ok
-      return res.json(); // alors recuperer au format json
+      return res.json();
     }
   })
   .then(function (data) {
-    // recuperer les data
-    data.forEach((element) => buildProduct(element)); //boucle pour afficher les elements
-    console.log(data); // logs des data dans la console
+    data.forEach((element) => buildProduct(element));
+    console.log(data);
   });
 
+//Fonction de creation d article produit
+
 function buildProduct(product) {
-  // fonction de creation d article produit
-  let articleProduit = document.getElementById("items"); // creation d'une variable a partir de l id des elements dans le document
-  console.log(product); // logs des produit dans la console
+  let articleProduit = document.getElementById("items");
+  console.log(product);
 
   articleProduit.innerHTML += `<a href="./product.html?id=${product._id}">
    <article>
@@ -24,5 +22,4 @@ function buildProduct(product) {
      <p class="productDescription">${product.description}</p>
    </article>
  </a>`;
-  // ajout d'un contenu HTMl en fonction des info recuper dans le doc
 }

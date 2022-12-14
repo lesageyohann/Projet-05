@@ -1,5 +1,7 @@
 let produitInLocalStorage = JSON.parse(localStorage.getItem("product"));
 
+let fullCart = [];
+
 if (produitInLocalStorage === null || produitInLocalStorage.length === 0) {
   document.getElementById("cart__items").innerText = "Panier vide";
 } else
@@ -29,7 +31,7 @@ if (produitInLocalStorage === null || produitInLocalStorage.length === 0) {
                   </div>
                   <div class="cart__item__content__settings">
                     <div class="cart__item__content__settings__quantity">
-                      <p>Qté :${product.quantity} </p>
+                      <p>Qté :</p>
                       <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${element.quantity}">
                     </div>
                     <div class="cart__item__content__settings__delete">
@@ -38,31 +40,67 @@ if (produitInLocalStorage === null || produitInLocalStorage.length === 0) {
                   </div>
                 </div>
               </article>`;
+
+        fullCart.push({
+          id: element.id,
+          price: product.price,
+          quantity: element.quantity,
+        });
       });
-      Total(data);
+
+      // createHTML() pour mettre le bloc du dessus dedans
+      console.log(fullCart);
+      Delete();
+      Total();
+      //créer les event suppressio
+      //créer les event qty
     })
     .catch(function (err) {
       console.log(err);
-      // Une erreur est survenue
     });
 
+//Total
+
 function Total() {
-  let prixTotal = [];
-  let quantiteTotal = [];
-  let productInLocalStorage = JSON.parse(localStorage.getItem("product"));
+  let prixPanier = 0;
+  let quantitePanier = 0;
 
-  for (let t = 0; t < productInLocalStorage.length; t++) {
-    let prixPanier =
-      productInLocalStorage[t].prix * productInLocalStorage[t].quantite;
-    let quantitePanier = parseInt(productInLocalStorage[t].quantite);
+  for (let t = 0; t < fullCart.length; t++) {
+    prixPanier += parseInt(fullCart[t].price) * parseInt(fullCart[t].quantity);
 
-    prixTotal.push(prixPanier);
-    quantiteTotal.push(quantitePanier);
-
-    console.log(prixPanier);
-    console.log(quantitePanier);
+    quantitePanier += parseInt(fullCart[t].quantity);
   }
 
-  document.querySelector("#totalPrice").innerHTML = `${prixTotal}`;
-  document.querySelector("#totalQuantity").innerHTML = `${quantiteTotal}`;
+  console.log(prixPanier);
+  console.log(quantitePanier);
+
+  document.querySelector("#totalPrice").innerText = prixPanier;
+  document.querySelector("#totalQuantity").innerText = quantitePanier;
+}
+
+//Supression wip
+
+function Delete() {
+  let article = e.target.closest("article");
+  produitInLocalStorage = produitInLocalStorage.filter(
+    (element) =>
+      element.id !== article.dataset.id ||
+      element.color !== article.dataset.color
+  );
+
+  localStorage.setItem("product", JSON.stringify(produitInLocalStorage));
+  fullCart = fullCart.filter(
+    (element) =>
+      element.id !== article.dataset.id ||
+      element.color !== article.dataset.color
+  );
+  article.remove();
+  Total();
+}
+
+function DeleteItem() {
+  let cartItems = document.getElementsByClassName("Delete");
+  for (let item of cartItems) {
+    item.onclick = removeItem;
+  }
 }

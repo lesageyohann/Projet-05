@@ -1,20 +1,16 @@
 const queryString = window.location.search;
 console.log(queryString);
-// ?product=shirt&color=blue&newuser&size=m
 const urlParams = new URLSearchParams(queryString);
 const product = urlParams.get("id");
 console.log(product);
 
-fetch(`http://localhost:3000/api/products/${product}`) //requete http
+fetch(`http://localhost:3000/api/products/${product}`)
   .then(function (res) {
-    //recuperer le resultat
     if (res.ok) {
-      // si reponse ok
-      return res.json(); // alors recuperer au format json
+      return res.json();
     }
   })
   .then(function (data) {
-    // recuperer les data
     buildImageProduct(data);
     buildTitleProduct(data);
     buidPriceProduct(data);
@@ -24,7 +20,6 @@ fetch(`http://localhost:3000/api/products/${product}`) //requete http
   })
   .catch(function (err) {
     console.log(err);
-    // Une erreur est survenue
   });
 
 let errorColor = document.createElement("div");
@@ -32,16 +27,15 @@ document.getElementById("colors").after(errorColor);
 let errorQuantity = document.createElement("div");
 document.getElementById("quantity").after(errorQuantity);
 
-// fonction de creation d image produit
-// creation d'une variable a partir de l id des elements dans le document
-// logs des produit dans la console
-// ajout du contenu dans le fichier html
+//Fonction de creation d image produit
 function buildImageProduct(product) {
   let imgProduit = document.getElementsByClassName("item__img");
   console.log(imgProduit[0]);
 
   imgProduit[0].innerHTML += `<img src="${product.imageUrl}" alt="Photographie d'un canapé">`;
 }
+
+// Fonction Titre Produit
 
 function buildTitleProduct(product) {
   let titreProduit = document.getElementById("title");
@@ -50,6 +44,8 @@ function buildTitleProduct(product) {
   titreProduit.innerHTML += `${product.name}`;
 }
 
+// Fonction Prix Porduit
+
 function buidPriceProduct(product) {
   let price = document.getElementById("price");
   console.log(price);
@@ -57,12 +53,16 @@ function buidPriceProduct(product) {
   price.innerHTML = `${product.price}`;
 }
 
+//Fonction Descirption Produit
+
 function buildDescriptionProduct(product) {
   let descriptionProduit = document.getElementById("description");
   console.log(descriptionProduit);
 
   descriptionProduit.innerHTML += `${product.description}`;
 }
+
+//Fonction Couleur Produit
 
 function buildColorProduct(product) {
   for (let color of product.colors) {
@@ -72,14 +72,13 @@ function buildColorProduct(product) {
   }
 }
 
-// evenement à l'action sur le bouton
-// récuperation de l id, couleur et quantité
-// creation d'un tableau
-// transforme les objets en valeurs
+//Evenement à l'action sur le bouton
 
 let button = document.getElementById("addToCart");
 
 button.addEventListener("click", addCart);
+
+//Fonction Ajouter Cart
 
 function addCart() {
   errorColor.innerText = "";
@@ -119,7 +118,7 @@ function addCart() {
       console.log(index);
       if (index >= 0) {
         productInLocalStorage[index].quantity =
-          parseInt(productInLocalStorage[index].quantity) + parseInt(quantity); // envoie la nouvelle valeur + valeur ajouté
+          parseInt(productInLocalStorage[index].quantity) + parseInt(quantity);
         localStorage.setItem("product", JSON.stringify(productInLocalStorage));
         console.log("okQuantite");
       } else {
