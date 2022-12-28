@@ -55,6 +55,7 @@ if (produitInLocalStorage === null || produitInLocalStorage.length === 0) {
       newQuantity();
       Total();
       checkOrder();
+      commande();
     })
     .catch(function (err) {
       console.log(err);
@@ -134,41 +135,87 @@ function newQuantity() {
 }
 
 // Formulaire
+let commonRegex = /^(?=.{2,40}$)[a-zA-Z]+(?:[-'\s][a-zA-Z]+)*$/;
+let adressRegex = /^[A-Za-z0-9\s]{5,50}$/;
+let mailRegex =
+  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-checkOrder(
-  "firstName",
-  "/^[A-Z][A-Za-zéèê-]+$/",
-  "Veuillez entrer votre prénom"
-);
-checkOrder("lastName", "/^[A-Z][A-Za-zéèê-]+$/", "Veuillez entrer votre nom");
-/*checkOrder(
-  "address",
-  "/^[A-Z][A-Za-zéèê-]+$/",
-  "Veuillez entrer votre adresse"
-);
-checkOrder(
-  "city",
-  "/^[A-Z][A-Za-zéèê-]+$/",
-  "Veuillez entrer le nom de votre ville"
-);*/
-
-function checkOrder(input, regex, error) {
+function checkOrder(input, regex, error, errorInput) {
   let doc = document.getElementById(input);
-  let textName = document.getElementById("firstNameErrorMsg");
 
   doc.addEventListener("input", function (e) {
-    let pattern = /^[A-Z][A-Za-z\é\è\ê\-]+$/;
+    let input = document.getElementById(errorInput);
     let currentValue = e.target.value;
     console.log("valeur", currentValue);
-    let check = pattern.test(currentValue);
+    let check = regex.test(currentValue);
     console.log("valid", check);
 
     if (!check) {
-      textName.innerHTML = error;
+      input.innerHTML = error;
+      formCheck.input = false;
     } else {
-      textName.innerHTML = "";
+      input.innerHTML = "";
+      formCheck.input = true;
     }
+    console.log(formCheck);
   });
 }
 
-// Pas de regex mail adress ville?
+checkOrder(
+  "firstName",
+  commonRegex,
+  "Veuillez entrer votre prénom",
+  "firstNameErrorMsg"
+);
+checkOrder(
+  "lastName",
+  commonRegex,
+  "Veuillez entrer votre nom",
+  "lastNameErrorMsg"
+);
+checkOrder(
+  "address",
+  adressRegex,
+  "Veuillez entrer votre adresse",
+  "addressErrorMsg"
+);
+checkOrder(
+  "city",
+  commonRegex,
+  "Veuillez entrer le nom de votre ville",
+  "cityErrorMsg"
+);
+checkOrder(
+  "email",
+  mailRegex,
+  "Veuillez entrer votre adresse mail",
+  "emailErrorMsg"
+);
+
+// Commande
+
+let formCheck = {
+  firstName: false,
+  lastName: false,
+  email: false,
+  address: false,
+  city: false,
+};
+
+function Commande() {
+  if (
+    formCheck.firstName &&
+    formCheck.lastName &&
+    formCheck.address &&
+    formCheck.city &&
+    formCheck.email &&
+    sofa.length < 0
+  ) {
+    console.log("ok");
+    sendOrder();
+  } else {
+    alert(
+      "Veuillez remplir correctement le formulaire / ajouter des objets dans le panier"
+    );
+  }
+}
