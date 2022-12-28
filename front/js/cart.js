@@ -52,9 +52,9 @@ if (produitInLocalStorage === null || produitInLocalStorage.length === 0) {
       // createHTML() pour mettre le bloc du dessus dedans
       console.log(fullCart);
       Delete();
+      newQuantity();
       Total();
-      //créer les event suppressio
-      //créer les event qty
+      checkOrder();
     })
     .catch(function (err) {
       console.log(err);
@@ -79,7 +79,7 @@ function Total() {
   document.querySelector("#totalQuantity").innerText = quantitePanier;
 }
 
-//Supression
+//Supprimé
 
 function Delete() {
   let btn = document.querySelectorAll(".deleteItem");
@@ -95,10 +95,80 @@ function Delete() {
           element.id !== article.dataset.id ||
           element.color !== article.dataset.color
       );
-      localStorage.setItem("product", JSON.stringify(fullCart));
+      produitInLocalStorage = produitInLocalStorage.filter(
+        (element) =>
+          element.id !== article.dataset.id ||
+          element.color !== article.dataset.color
+      );
+      localStorage.setItem("product", JSON.stringify(produitInLocalStorage));
       console.log(fullCart);
       article.remove();
       Total();
     });
   }
 }
+
+// Modification
+
+function newQuantity() {
+  let btnQuantity = document.querySelectorAll(".itemQuantity");
+  console.log(btnQuantity);
+  for (let i = 0; i < btnQuantity.length; i++) {
+    console.log(btnQuantity);
+    btnQuantity[i].addEventListener("click", (e) => {
+      console.log(e.target);
+      let article = e.target.closest("article");
+      let index = fullCart.findIndex(
+        (element) =>
+          element.id == article.dataset.id &&
+          element.color == article.dataset.color
+      );
+      console.log(index);
+      produitInLocalStorage[index].quantity = e.target.value;
+      fullCart[index].quantity = e.target.value;
+      console.log(produitInLocalStorage[index].quantity);
+      localStorage.setItem("product", JSON.stringify(produitInLocalStorage));
+      Total();
+    });
+  }
+}
+
+// Formulaire
+
+checkOrder(
+  "firstName",
+  "/^[A-Z][A-Za-zéèê-]+$/",
+  "Veuillez entrer votre prénom"
+);
+checkOrder("lastName", "/^[A-Z][A-Za-zéèê-]+$/", "Veuillez entrer votre nom");
+/*checkOrder(
+  "address",
+  "/^[A-Z][A-Za-zéèê-]+$/",
+  "Veuillez entrer votre adresse"
+);
+checkOrder(
+  "city",
+  "/^[A-Z][A-Za-zéèê-]+$/",
+  "Veuillez entrer le nom de votre ville"
+);*/
+
+function checkOrder(input, regex, error) {
+  let doc = document.getElementById(input);
+  let textName = document.getElementById("firstNameErrorMsg");
+
+  doc.addEventListener("input", function (e) {
+    let pattern = /^[A-Z][A-Za-z\é\è\ê\-]+$/;
+    let currentValue = e.target.value;
+    console.log("valeur", currentValue);
+    let check = pattern.test(currentValue);
+    console.log("valid", check);
+
+    if (!check) {
+      textName.innerHTML = error;
+    } else {
+      textName.innerHTML = "";
+    }
+  });
+}
+
+// Pas de regex mail adress ville?
