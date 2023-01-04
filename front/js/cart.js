@@ -48,14 +48,12 @@ if (produitInLocalStorage === null || produitInLocalStorage.length === 0) {
           color: element.color,
         });
       });
-
-      // createHTML() pour mettre le bloc du dessus dedans
       console.log(fullCart);
       Delete();
       newQuantity();
       Total();
       checkOrder();
-      commande();
+      order();
     })
     .catch(function (err) {
       console.log(err);
@@ -141,21 +139,22 @@ let mailRegex =
   /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 function checkOrder(input, regex, error, errorInput) {
+  console.log(input);
   let doc = document.getElementById(input);
 
   doc.addEventListener("input", function (e) {
-    let input = document.getElementById(errorInput);
+    let inputToCheck = document.getElementById(errorInput);
     let currentValue = e.target.value;
-    console.log("valeur", currentValue);
+    //console.log("valeur", currentValue);
     let check = regex.test(currentValue);
-    console.log("valid", check);
+    //console.log("valid", check);
 
     if (!check) {
-      input.innerHTML = error;
-      formCheck.input = false;
+      inputToCheck.innerHTML = error;
+      formCheck[input] = false;
     } else {
-      input.innerHTML = "";
-      formCheck.input = true;
+      inputToCheck.innerHTML = "";
+      formCheck[input] = true;
     }
     console.log(formCheck);
   });
@@ -202,20 +201,32 @@ let formCheck = {
   city: false,
 };
 
-function Commande() {
-  if (
-    formCheck.firstName &&
-    formCheck.lastName &&
-    formCheck.address &&
-    formCheck.city &&
-    formCheck.email &&
-    sofa.length < 0
-  ) {
-    console.log("ok");
-    sendOrder();
-  } else {
-    alert(
-      "Veuillez remplir correctement le formulaire / ajouter des objets dans le panier"
-    );
-  }
+function order() {
+  let btnOrder = document.getElementById("order");
+
+  btnOrder.addEventListener("click", (e) => {
+    e.preventdefault();
+    if (
+      formCheck.firstName &&
+      formCheck.lastName &&
+      formCheck.address &&
+      formCheck.city &&
+      formCheck.email &&
+      Total().length > 0
+    ) {
+      sendOrder();
+      console.log("ok");
+    } else {
+      alert(
+        "Veuillez remplir correctement le formulaire / ajouter des objets dans le panier"
+      );
+      console.log("Erreur");
+    }
+  });
 }
+
+// TODO
+// ajouter un event sur le bouton
+// Dans l'event, vérifier  que tous les champs soient true + commande.length > 0
+// Si c'est le cas, on envoie la commande
+// Sinon, on affiche un message d'erreur
