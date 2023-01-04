@@ -76,6 +76,7 @@ function Total() {
 
   document.querySelector("#totalPrice").innerText = prixPanier;
   document.querySelector("#totalQuantity").innerText = quantitePanier;
+  return quantitePanier;
 }
 
 //Supprimé
@@ -202,19 +203,20 @@ let formCheck = {
 };
 
 function order() {
-  let btnOrder = document.getElementById("order");
+  let btnOrder = document.getElementsByClassName(cart__order__form)[0];
 
-  btnOrder.addEventListener("click", (e) => {
+  btnOrder.addEventListener("submit", (e) => {
     e.preventdefault();
+    console.log(btnOrder);
     if (
       formCheck.firstName &&
       formCheck.lastName &&
       formCheck.address &&
       formCheck.city &&
       formCheck.email &&
-      Total().length > 0
+      Total() > 0
     ) {
-      sendOrder();
+      //sendOrder();
       console.log("ok");
     } else {
       alert(
