@@ -52,7 +52,6 @@ if (produitInLocalStorage === null || produitInLocalStorage.length === 0) {
       Delete();
       newQuantity();
       Total();
-      checkOrder();
       order();
     })
     .catch(function (err) {
@@ -203,10 +202,10 @@ let formCheck = {
 };
 
 function order() {
-  let btnOrder = document.getElementsByClassName(cart__order__form)[0];
+  let btnOrder = document.getElementsByClassName("cart__order__form")[0];
 
   btnOrder.addEventListener("submit", (e) => {
-    e.preventdefault();
+    e.preventDefault();
     console.log(btnOrder);
     if (
       formCheck.firstName &&
@@ -216,7 +215,12 @@ function order() {
       formCheck.email &&
       Total() > 0
     ) {
-      //sendOrder();
+      let productId = [];
+      produitInLocalStorage.forEach((product) => {
+        productId.push(product.id);
+      });
+      console.log(productId);
+      Valid(productId);
       console.log("ok");
     } else {
       alert(
@@ -227,8 +231,36 @@ function order() {
   });
 }
 
-// TODO
-// ajouter un event sur le bouton
-// Dans l'event, vérifier  que tous les champs soient true + commande.length > 0
-// Si c'est le cas, on envoie la commande
-// Sinon, on affiche un message d'erreur
+// Validation
+
+function Valid(productId) {
+  fetch("http://localhost:3000/api/products/order", {
+    method: "POST",
+    headers: {
+      Accept: "aplication.json",
+      "Content-Type": "application/json",
+    },
+
+    body: JSON.stringify({
+      contact: {
+        firstName: firstName.value,
+        lastName: lastName.value,
+        email: email.value,
+        address: address.value,
+        city: city.value,
+      },
+      products: productId,
+    }),
+  })
+    .then(function (retour) {
+      if (retour.ok) {
+        return retour.json();
+      }
+    })
+    .then(function (data) {
+      console.log(data);
+      document.location.href = `confirmation.html?orderId=${data.orderId}`;
+      localStorage.clear();
+    })
+    .catch(function (err) {});
+}

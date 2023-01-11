@@ -107,6 +107,7 @@ function addCart() {
     errorQuantity.innerText = "Ajouter quantité";
   }
   if (color != "" && parseInt(quantity) > 0 && parseInt(quantity) < 100) {
+    alert("Produit ajouté");
     if (productInLocalStorage == null) {
       productInLocalStorage = [];
       productInLocalStorage.push(product),
