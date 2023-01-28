@@ -1,8 +1,8 @@
 const queryString = window.location.search;
-console.log(queryString);
+//console.log(queryString);
 const urlParams = new URLSearchParams(queryString);
 const product = urlParams.get("id");
-console.log(product);
+//console.log(product);
 
 fetch(`http://localhost:3000/api/products/${product}`)
   .then(function (res) {
@@ -27,10 +27,12 @@ document.getElementById("colors").after(errorColor);
 let errorQuantity = document.createElement("div");
 document.getElementById("quantity").after(errorQuantity);
 
+/***************************************************************************************************************************/
+
 //Fonction de creation d image produit
 function buildImageProduct(product) {
   let imgProduit = document.getElementsByClassName("item__img");
-  console.log(imgProduit[0]);
+  //console.log(imgProduit[0]);
 
   imgProduit[0].innerHTML += `<img src="${product.imageUrl}" alt="Photographie d'un canapé">`;
 }
@@ -39,7 +41,7 @@ function buildImageProduct(product) {
 
 function buildTitleProduct(product) {
   let titreProduit = document.getElementById("title");
-  console.log(titreProduit);
+  //console.log(titreProduit);
 
   titreProduit.innerHTML += `${product.name}`;
 }
@@ -48,7 +50,7 @@ function buildTitleProduct(product) {
 
 function buidPriceProduct(product) {
   let price = document.getElementById("price");
-  console.log(price);
+  //console.log(price);
 
   price.innerHTML = `${product.price}`;
 }
@@ -57,7 +59,7 @@ function buidPriceProduct(product) {
 
 function buildDescriptionProduct(product) {
   let descriptionProduit = document.getElementById("description");
-  console.log(descriptionProduit);
+  //console.log(descriptionProduit);
 
   descriptionProduit.innerHTML += `${product.description}`;
 }
@@ -67,10 +69,12 @@ function buildDescriptionProduct(product) {
 function buildColorProduct(product) {
   for (let color of product.colors) {
     let couleurProduit = document.getElementById("colors");
-    console.log(couleurProduit);
+    //console.log(couleurProduit);
     couleurProduit.innerHTML += `<option value="${color}">${color}</option>`;
   }
 }
+
+/***************************************************************************************************************************/
 
 //Evenement à l'action sur le bouton
 
@@ -84,13 +88,13 @@ function addCart() {
   errorColor.innerText = "";
   errorQuantity.innerText = "";
   let id = urlParams.get("id");
-  console.log(id);
+  //console.log(id);
 
   let color = document.getElementById("colors").value;
-  console.log(color);
+  //console.log(color);
 
   let quantity = document.getElementById("quantity").value;
-  console.log(quantity);
+  //console.log(quantity);
 
   let product = {
     id: id,
@@ -116,16 +120,16 @@ function addCart() {
       let index = productInLocalStorage.findIndex(
         (p) => p.id === id && p.color === color
       );
-      console.log(index);
+      //console.log(index);
       if (index >= 0) {
         productInLocalStorage[index].quantity =
           parseInt(productInLocalStorage[index].quantity) + parseInt(quantity);
         localStorage.setItem("product", JSON.stringify(productInLocalStorage));
-        console.log("okQuantite");
+        //console.log("okQuantite");
       } else {
         productInLocalStorage.push(product);
         localStorage.setItem("product", JSON.stringify(productInLocalStorage));
-        console.log("okProduit");
+        //console.log("okProduit");
       }
     }
   }

@@ -58,6 +58,8 @@ if (produitInLocalStorage === null || produitInLocalStorage.length === 0) {
       console.log(err);
     });
 
+/***************************************************************************************************************************/
+
 //Total
 
 function Total() {
@@ -70,22 +72,24 @@ function Total() {
     quantitePanier += parseInt(fullCart[t].quantity);
   }
 
-  console.log(prixPanier);
-  console.log(quantitePanier);
+  //console.log(prixPanier);
+  //console.log(quantitePanier);
 
   document.querySelector("#totalPrice").innerText = prixPanier;
   document.querySelector("#totalQuantity").innerText = quantitePanier;
   return quantitePanier;
 }
 
+/***************************************************************************************************************************/
+
 //Supprimé
 
 function Delete() {
   let btn = document.querySelectorAll(".deleteItem");
-  console.log(btn);
-  console.log(fullCart);
+  //console.log(btn);
+  //console.log(fullCart);
   for (let i = 0; i < btn.length; i++) {
-    console.log(btn);
+    //console.log(btn);
     btn[i].addEventListener("click", (e) => {
       console.log(e.target);
       let article = e.target.closest("article");
@@ -100,37 +104,41 @@ function Delete() {
           element.color !== article.dataset.color
       );
       localStorage.setItem("product", JSON.stringify(produitInLocalStorage));
-      console.log(fullCart);
+      //console.log(fullCart);
       article.remove();
       Total();
     });
   }
 }
 
+/***************************************************************************************************************************/
+
 // Modification
 
 function newQuantity() {
   let btnQuantity = document.querySelectorAll(".itemQuantity");
-  console.log(btnQuantity);
+  //console.log(btnQuantity);
   for (let i = 0; i < btnQuantity.length; i++) {
-    console.log(btnQuantity);
+    //console.log(btnQuantity);
     btnQuantity[i].addEventListener("click", (e) => {
-      console.log(e.target);
+      //console.log(e.target);
       let article = e.target.closest("article");
       let index = fullCart.findIndex(
         (element) =>
           element.id == article.dataset.id &&
           element.color == article.dataset.color
       );
-      console.log(index);
+      //console.log(index);
       produitInLocalStorage[index].quantity = e.target.value;
       fullCart[index].quantity = e.target.value;
-      console.log(produitInLocalStorage[index].quantity);
+      //console.log(produitInLocalStorage[index].quantity);
       localStorage.setItem("product", JSON.stringify(produitInLocalStorage));
       Total();
     });
   }
 }
+
+/***************************************************************************************************************************/
 
 // Formulaire
 let commonRegex = /^(?=.{2,40}$)[a-zA-Z]+(?:[-'\s][a-zA-Z]+)*$/;
@@ -139,7 +147,7 @@ let mailRegex =
   /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 function checkOrder(input, regex, error, errorInput) {
-  console.log(input);
+  //console.log(input);
   let doc = document.getElementById(input);
 
   doc.addEventListener("input", function (e) {
@@ -156,7 +164,7 @@ function checkOrder(input, regex, error, errorInput) {
       inputToCheck.innerHTML = "";
       formCheck[input] = true;
     }
-    console.log(formCheck);
+    //console.log(formCheck);
   });
 }
 
@@ -191,6 +199,8 @@ checkOrder(
   "emailErrorMsg"
 );
 
+/***************************************************************************************************************************/
+
 // Commande
 
 let formCheck = {
@@ -206,7 +216,7 @@ function order() {
 
   btnOrder.addEventListener("submit", (e) => {
     e.preventDefault();
-    console.log(btnOrder);
+    //console.log(btnOrder);
     if (
       formCheck.firstName &&
       formCheck.lastName &&
@@ -221,15 +231,17 @@ function order() {
       });
       console.log(productId);
       Valid(productId);
-      console.log("ok");
+      //console.log("ok");
     } else {
       alert(
         "Veuillez remplir correctement le formulaire / ajouter des objets dans le panier"
       );
-      console.log("Erreur");
+      //console.log("Erreur");
     }
   });
 }
+
+/***************************************************************************************************************************/
 
 // Validation
 
@@ -258,7 +270,7 @@ function Valid(productId) {
       }
     })
     .then(function (data) {
-      console.log(data);
+      //console.log(data);
       document.location.href = `confirmation.html?orderId=${data.orderId}`;
       localStorage.clear();
     })
