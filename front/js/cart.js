@@ -5,41 +5,18 @@ let fullCart = [];
 if (produitInLocalStorage === null || produitInLocalStorage.length === 0) {
   document.getElementById("cart__items").innerText = "Panier vide";
 } else
-  fetch("http://localhost:3000/api/products") //requete http
+  fetch("http://localhost:3000/api/products")
     .then(function (res) {
-      //recuperer le resultat
       if (res.ok) {
-        // si reponse ok
-        return res.json(); // alors recuperer au format json
+        return res.json();
       }
     })
     .then(function (data) {
       produitInLocalStorage.forEach((element) => {
         let product = data.find((p) => p._id === element.id);
         console.log(product);
-        document.getElementById(
-          "cart__items"
-        ).innerHTML += `<article class="cart__item" data-id="${element.id}" data-color="${element.color}">
-                <div class="cart__item__img">
-                  <img src="${product.imageUrl}" alt="Photographie d'un canapé">
-                </div>
-                <div class="cart__item__content">
-                  <div class="cart__item__content__description">
-                    <h2>${product.name}</h2>
-                    <p>${element.color}</p>
-                    <p>${product.price} €</p>
-                  </div>
-                  <div class="cart__item__content__settings">
-                    <div class="cart__item__content__settings__quantity">
-                      <p>Qté :</p>
-                      <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${element.quantity}">
-                    </div>
-                    <div class="cart__item__content__settings__delete">
-                      <p class="deleteItem">Supprimer</p>
-                    </div>
-                  </div>
-                </div>
-              </article>`;
+        Content(element, product);
+        //console.log(Content);
 
         fullCart.push({
           id: element.id,
@@ -48,7 +25,7 @@ if (produitInLocalStorage === null || produitInLocalStorage.length === 0) {
           color: element.color,
         });
       });
-      console.log(fullCart);
+      //console.log(fullCart);
       Delete();
       newQuantity();
       Total();
@@ -57,6 +34,92 @@ if (produitInLocalStorage === null || produitInLocalStorage.length === 0) {
     .catch(function (err) {
       console.log(err);
     });
+
+/***************************************************************************************************************************/
+
+// Affichage Panier
+
+function Content(element, product) {
+  const blockArticle = document.createElement("article");
+  blockArticle.classList.add("cart__item");
+  blockArticle.dataset.id = element.id;
+  blockArticle.dataset.color = element.color;
+  const panier = document.querySelector("#cart__items");
+  panier.appendChild(blockArticle);
+  //console.log(blockArticle);
+
+  const ImgDiv = document.createElement("div");
+  ImgDiv.classList.add("cart__item__img");
+  blockArticle.appendChild(ImgDiv);
+  //console.log(ImgDiv)
+
+  const image = document.createElement("img");
+  image.src = product.imageUrl;
+  image.alt = product.altTxt;
+  ImgDiv.appendChild(image);
+  //onsole.log(image);
+
+  const contentDiv = document.createElement("div");
+  contentDiv.classList.add("cart__item__content");
+  blockArticle.appendChild(contentDiv);
+  //console.log(contentDiv);
+
+  const descriptionDiv = document.createElement("div");
+  descriptionDiv.classList.add("cart__item__content__description");
+  contentDiv.appendChild(descriptionDiv);
+  //console.log(descriptionDiv);
+
+  const h2 = document.createElement("h2");
+  h2.textContent = product.name;
+  descriptionDiv.appendChild(h2);
+  //console.log(h2);
+
+  const pColor = document.createElement("p");
+  pColor.textContent = element.color;
+  descriptionDiv.appendChild(pColor);
+  //console.log(pColor);
+
+  const pPrice = document.createElement("p");
+  pPrice.textContent = element.price;
+  descriptionDiv.appendChild(pPrice);
+  //console.log(pPrice);
+
+  const settingsDiv = document.createElement("div");
+  settingsDiv.classList.add("cart__item__content__settings");
+  contentDiv.appendChild(settingsDiv);
+  //console.log(settingsDiv);
+
+  const quantityDiv = document.createElement("div");
+  quantityDiv.classList.add("cart__item__content__settings__quantity");
+  settingsDiv.appendChild(quantityDiv);
+  //console.log(quantityDiv);
+
+  const pQuantity = document.createElement("p");
+  pQuantity.textContent = "Qté :";
+  settingsDiv.appendChild(pQuantity);
+  //console.log(pQuantity);
+
+  const inputQuantity = document.createElement("input");
+  inputQuantity.setAttribute("type", "number");
+  inputQuantity.classList.add("itemQuantity");
+  inputQuantity.setAttribute("name", "itemQuantity");
+  inputQuantity.setAttribute("min", "1");
+  inputQuantity.setAttribute("max", "100");
+  inputQuantity.value = element.quantity;
+  settingsDiv.appendChild(inputQuantity);
+  //console.log(inputQuantity);
+
+  const deleteDiv = document.createElement("div");
+  deleteDiv.classList.add("cart__item__content__settings__delete");
+  contentDiv.appendChild(deleteDiv);
+  //console.log(deleteDiv);
+
+  const pDelete = document.createElement("p");
+  pDelete.classList.add("deleteItem");
+  pDelete.textContent = "Supprimer";
+  deleteDiv.appendChild(pDelete);
+  //console.log(pDelete);
+}
 
 /***************************************************************************************************************************/
 

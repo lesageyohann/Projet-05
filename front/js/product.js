@@ -34,7 +34,7 @@ function buildImageProduct(product) {
   let imgProduit = document.getElementsByClassName("item__img");
   //console.log(imgProduit[0]);
 
-  imgProduit[0].innerHTML += `<img src="${product.imageUrl}" alt="Photographie d'un canapé">`;
+  imgProduit[0].innerHTML = `<img src="${product.imageUrl}" alt="Photographie d'un canapé">`;
 }
 
 // Fonction Titre Produit
@@ -43,7 +43,7 @@ function buildTitleProduct(product) {
   let titreProduit = document.getElementById("title");
   //console.log(titreProduit);
 
-  titreProduit.innerHTML += `${product.name}`;
+  titreProduit.innerHTML = product.name;
 }
 
 // Fonction Prix Porduit
@@ -52,7 +52,7 @@ function buidPriceProduct(product) {
   let price = document.getElementById("price");
   //console.log(price);
 
-  price.innerHTML = `${product.price}`;
+  price.innerHTML = product.price;
 }
 
 //Fonction Descirption Produit
@@ -61,7 +61,7 @@ function buildDescriptionProduct(product) {
   let descriptionProduit = document.getElementById("description");
   //console.log(descriptionProduit);
 
-  descriptionProduit.innerHTML += `${product.description}`;
+  descriptionProduit.innerHTML = product.description;
 }
 
 //Fonction Couleur Produit
@@ -69,8 +69,13 @@ function buildDescriptionProduct(product) {
 function buildColorProduct(product) {
   for (let color of product.colors) {
     let couleurProduit = document.getElementById("colors");
+    let option = document.createElement("option");
+
+    option.value = color;
+    option.innerHTML = color;
+    console.log(option);
+    couleurProduit.appendChild(option);
     //console.log(couleurProduit);
-    couleurProduit.innerHTML += `<option value="${color}">${color}</option>`;
   }
 }
 
