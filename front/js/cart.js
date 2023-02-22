@@ -1,3 +1,19 @@
+// On défini une variable qui récupère la valeur stockée dans le localstorage sous la clé product
+//
+// On initialise un tableau fullCart vide
+//
+// Si le localstorage ne contient pas d'objet ou si il est vide, on affiche pannier vide
+// Sinon on fetch l'api avec l'url
+// Une fonction then est appelé pour verifier la réponse et la renvoyer au format json
+// Une fonction then est appelé pour itéré sur chaque élément du stocker dans la variable produitInLocalStorage avec forEach
+// Pour chaque élément on recherche le produit correspondant au data en utilisant find en comparant les ID du produit stocké et de l'api
+// Puis on fait appel a la fonction contentItem pour créer le contenu HTML
+// On ajoute un nouvel objet a fullCart contenant ID prix quantité et couleur
+// Enfin on appel différente fonction pour la suppression, modification, le total et la commande
+//
+// Methode catch pour renvoyer les erreurs dans les promise.
+// Console log de l'arguement err qui permet d'obtenir des informations sur l'emplacement ou la source de l'erreur
+
 let produitInLocalStorage = JSON.parse(localStorage.getItem("product"));
 
 let fullCart = [];
@@ -15,7 +31,7 @@ if (produitInLocalStorage === null || produitInLocalStorage.length === 0) {
       produitInLocalStorage.forEach((element) => {
         let product = data.find((p) => p._id === element.id);
         console.log(product);
-        Content(element, product);
+        contentItem(element, product);
         //console.log(Content);
 
         fullCart.push({
@@ -26,9 +42,9 @@ if (produitInLocalStorage === null || produitInLocalStorage.length === 0) {
         });
       });
       //console.log(fullCart);
-      Delete();
+      deleteItem();
       newQuantity();
-      Total();
+      total();
       order();
     })
     .catch(function (err) {
@@ -38,8 +54,74 @@ if (produitInLocalStorage === null || produitInLocalStorage.length === 0) {
 /***************************************************************************************************************************/
 
 // Affichage Panier
+//
+// Création de la fonction contentItem qui permet d'affiché différent élément dans une section HTML
+// Création d'un élément article dans une constante
+// Ajout d'une class cart__item à l'article par la constante
+// Ajout d'un ID obtenue dans le localstorage
+// Ajout d'une couleur obtenue dans le localstorage
+// Création d'une constante récupérant l'élément HTML identitfié par cart__items
+// Ajout de la constante blockArticle en tant qu'enfant de la constante panier permetant l'integration HTML
+//
+// Création d'une div dans une constante imgDiv
+// Ajout d'une class cart__item__img à la dic par la constante
+// Ajout de la div en tant qu'enfant de l'article précédement créé
+//
+// Insertion d'une image par une constante image
+// Définition de la source de l'image via l'api
+// Définition du texte alternatif via l'api
+// Ajout de l'image en tant qu'enfant de la div précédement créé
+//
+// Création d'une nouvelle div via une nouvelle constante contentDiv
+// Ajout de la class cart__item__content à la div via la constante
+// Ajout de la div en tant qu'enfant de l'article
+//
+// Création d'une nouvelle div via une nouvelle constante descriptionDiv
+// Ajout de la class cart__item__content__description à la div via la constante
+// Ajout de la div en tant qu'enfant de la dic précédente
+//
+// Création d'un titre via une constante h2
+// Définition du titre via l'api
+// Ajout du titre en tant qu'enfant de la div précédente
+//
+// Création d'un paragraphe pour la couleur via une constante pColor
+// Ajout du contenu du paragraphe via le localstorage
+// Ajout du paragraphe en tant qu'enfant de la div précédente
+//
+// Création d'un paragraphe pour le prix via une constante pPrice
+// Ajout du contenu du paragraphe via le localstorage
+// Ajout du paragraphe en tant qu'enfant de la div précédente
+//
+// Création d'une nouvelle div via une nouvelle constante settingDiv
+// Ajout de la class cart__item__content__settings à la div via la constante
+// Ajout de la div en tant qu'enfant de la div contentDiv
+//
+// Création d'une nouvelle div via une nouvelle constante quantityDiv
+// Ajout de la cart__item__content__settings__quantity à la div via la constante
+// Ajout de la div en tant qu'enfant de la div settingDiv
+//
+// Création d'un paragraphe pour la quantité via une constante pQuantity
+// AJout du texte "Qté" au paragraphe
+// Ajout du paragraphe en tant qu'enfant de la div quantityDiv
+//
+// Création d'un input pour la quantité via une constante inputQuantity
+// Ajout de l'attribut type: number à l'input
+// Ajout de la class itemQuantity à l'input
+// Ajout de l'attribut name: itemquantity
+// Ajout de l'attribut mun: 1
+// AJout de l'attribut max: 100
+// AJout de l'input en tant qu'enfant de la div settingDiv
+//
+// Création d'une div via la constante deleteDiv
+// Ajout de la class cart__item__content__settings__delete à la div
+// Ajout de la div en tant qu'enfant de la div contentDiv
+//
+// Création d'un paragraphe pDelete via une constante
+// Ajout de la class deleteItem au paragraphe
+// Ajout du texte supprimer au paragraphe
+// Ajout du paragraphe en tant qu'enfant de la div deleteDiv
 
-function Content(element, product) {
+function contentItem(element, product) {
   const blockArticle = document.createElement("article");
   blockArticle.classList.add("cart__item");
   blockArticle.dataset.id = element.id;
@@ -48,15 +130,15 @@ function Content(element, product) {
   panier.appendChild(blockArticle);
   //console.log(blockArticle);
 
-  const ImgDiv = document.createElement("div");
-  ImgDiv.classList.add("cart__item__img");
-  blockArticle.appendChild(ImgDiv);
+  const imgDiv = document.createElement("div");
+  imgDiv.classList.add("cart__item__img");
+  blockArticle.appendChild(imgDiv);
   //console.log(ImgDiv)
 
   const image = document.createElement("img");
   image.src = product.imageUrl;
   image.alt = product.altTxt;
-  ImgDiv.appendChild(image);
+  imgDiv.appendChild(image);
   //onsole.log(image);
 
   const contentDiv = document.createElement("div");
@@ -123,9 +205,20 @@ function Content(element, product) {
 
 /***************************************************************************************************************************/
 
-//Total
+//total
+//
+// Création de la fonction total pour obtenir les informations que le cout et la quantité total du panier
+//
+// Création de la variable prixPanier initié a 0
+// Création de la variable quantitePanier initié a 0
+// Utilisation de la boucle for pour calculé à chaque tour le prix du produit multiplier par sa quantité puis ajouté à la variable
+// Utilisation de la même boucle pour calculer le total de produit dans le panier
+//
+// Ajout du résultat obtenue dans prixPanier dans le HTML via la sélection de son ID
+// Ajout du résultat obtenue dans quantitePanier dansle HTML via la selection de son ID
+// Renvoie de la valeur obtenue dans quantitePanier
 
-function Total() {
+function total() {
   let prixPanier = 0;
   let quantitePanier = 0;
 
@@ -146,8 +239,18 @@ function Total() {
 /***************************************************************************************************************************/
 
 //Supprimé
+//
+// Création de la fonction deleteItem permettant de supprimé un article complet de la commande
+//
+// Création d'une constante récupérant les éléments HTML identitfié par deleteItem
+// Utilisation de la boucle for créé un évènement sur chaque bouton
+// Déclaration de la varible "article" avec closest pour trouver l'élément le plus proche qui correspond à l'élément spécifié
+// Les élément sont filtré du tableau full cart et produitInLocalSotrage en comparant les ID et couleurs
+// Mise à jour de la variable produitInLocalStorage
+// Suppression de l'élément article parent du bouton cliqué
+// Suppression de l'interface utilisateur avec la méthode remove
 
-function Delete() {
+function deleteItem() {
   let btn = document.querySelectorAll(".deleteItem");
   //console.log(btn);
   //console.log(fullCart);
@@ -169,7 +272,7 @@ function Delete() {
       localStorage.setItem("product", JSON.stringify(produitInLocalStorage));
       //console.log(fullCart);
       article.remove();
-      Total();
+      total();
     });
   }
 }
@@ -177,6 +280,15 @@ function Delete() {
 /***************************************************************************************************************************/
 
 // Modification
+//
+// Création de la fonction newQuantity permetant de modifier la quantité de chaque produit
+//
+// Définition d'une variable sélectionnant tout les boutons avec l'élément HTML itemQuantity
+// Utilisation de la boucle for pour créer un évenement sur chaque bouton
+// Déclaration de la varible "article" avec closest pour trouver l'élément le plus proche qui correspond à l'élément spécifié
+// Les élément sont recherché dans le tableau fullCart et le localStorage avec la méthode findIndex
+// Les tableau sont mise à jour en fonction de la valeur choisi par l'utilisateur
+// Appel de la fonction total pour recalculer prix et quantité total du panier
 
 function newQuantity() {
   let btnQuantity = document.querySelectorAll(".itemQuantity");
@@ -196,7 +308,7 @@ function newQuantity() {
       fullCart[index].quantity = e.target.value;
       //console.log(produitInLocalStorage[index].quantity);
       localStorage.setItem("product", JSON.stringify(produitInLocalStorage));
-      Total();
+      total();
     });
   }
 }
@@ -204,6 +316,17 @@ function newQuantity() {
 /***************************************************************************************************************************/
 
 // Formulaire
+//
+// Déclaration de différent regex adapté à l'utilisation attendu
+//
+// Déclaration de la fonction checkOrder qui vérifie la validité du formulaire de commande avec différent paramètre
+//
+// Récupération de l'élément HTML correspondant à l'input dans une variable
+// Ajout d'un événement qui vv se déclenché à chaque modification de l'input
+// A chaque déclenchement, on récupère la valeur et on vérifie sa validité
+// Si la valeur ne correspond pas à la regex alors on affiche un message d'erreur et défini formCheck sur false
+// Si la valuer correspond à la regex alors rien est affiché et formCheck est défini sur true
+
 let commonRegex = /^(?=.{2,40}$)[a-zA-Z]+(?:[-'\s][a-zA-Z]+)*$/;
 let adressRegex = /^[A-Za-z0-9\s]{5,50}$/;
 let mailRegex =
@@ -265,6 +388,13 @@ checkOrder(
 /***************************************************************************************************************************/
 
 // Commande
+//
+// Définition du tableau formCheck permétant la validité du formulaire
+// Chaque entré du tableau est défini sur false par défault pour éviter une commande vide est nécéssite la vérification via la fonction checkOrder
+//
+// Création de la fonction Order, action du bouton commander
+//
+//
 
 let formCheck = {
   firstName: false,
@@ -286,14 +416,14 @@ function order() {
       formCheck.address &&
       formCheck.city &&
       formCheck.email &&
-      Total() > 0
+      total() > 0
     ) {
       let productId = [];
       produitInLocalStorage.forEach((product) => {
         productId.push(product.id);
       });
       console.log(productId);
-      Valid(productId);
+      valid(productId);
       //console.log("ok");
     } else {
       alert(
@@ -308,7 +438,7 @@ function order() {
 
 // Validation
 
-function Valid(productId) {
+function valid(productId) {
   fetch("http://localhost:3000/api/products/order", {
     method: "POST",
     headers: {
