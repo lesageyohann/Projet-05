@@ -394,8 +394,13 @@ checkOrder(
 //
 // Création de la fonction Order, action du bouton commander
 //
-//
-
+// Sélection du bouton d'envoie via  sa class "cart__order__form"
+// Ajout d'un évenement submit sur le bouton
+// Lors de la soumission du formulaire, preventDefault empèche son envoie automatique
+// La fonction vérifie ensuite si chaque ligne du tableau est valide et si le total est superieur à 0
+// Si le tableau est valide, alors on créé un tableau product ID qui contient les identifiants de chaque produit
+// Puis on valid la commande
+// Sinon une alerte est affiché demandant de remplir correctement le panier / formulaire
 let formCheck = {
   firstName: false,
   lastName: false,
@@ -437,6 +442,16 @@ function order() {
 /***************************************************************************************************************************/
 
 // Validation
+//
+// Création de la fonction valid qui envoi les informations utilisateur et ID commande à l'url indiqué
+//
+// On utilise fetch avec la methode post pour envoyer les informations à l'URL cible
+// Création d'un tableau  à envoyer contenant les informations nécéssaire
+// Vérification de la réponse serveur , si la réponse est valide
+// Récupération des données JSON
+// Redirection de l'utilisateur vers la page de confirmation avec l'orderID inclut dans l'url de la page
+// Suppression du contenu du localStorage
+// Sinon la fonction ne fait rien
 
 function valid(productId) {
   fetch("http://localhost:3000/api/products/order", {

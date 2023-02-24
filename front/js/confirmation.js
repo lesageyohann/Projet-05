@@ -1,7 +1,7 @@
 // Création une constante qui permet de gerer les requete url
 //
 // Création d'une constante qui permet de récupérer la valeur du contenu url
-// Création d'une constante qui récupére l'id de la commande
+// Création d'une constante qui récupére l'id de la commande dans l'url
 //
 // Afficher l'id de la commande dans la page
 
